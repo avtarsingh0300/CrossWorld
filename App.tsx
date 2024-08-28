@@ -6,9 +6,11 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Stations from './src/Screens/Stations';
 import SplashScreen from './src/Screens/SplashScreen';
 import BottomTabs from './src/Navigations/BottomTabs';
+import { LogBox } from 'react-native';
 const Stack = createNativeStackNavigator();
-
+LogBox.ignoreAllLogs();
 function App() {
+
   return (
     <GestureHandlerRootView
       style={{

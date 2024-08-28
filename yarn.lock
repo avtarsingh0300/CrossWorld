@@ -2906,9 +2906,6 @@ fs-extra@^8.1.0:
 fs.realpath@^1.0.0:
   version "1.0.0"
 
-fsevents@^2.3.2:
-  version "2.3.3"
-
 function-bind@^1.1.2:
   version "1.1.2"
 
@@ -4496,6 +4493,11 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
   dependencies:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
+
+react-native-loader-kit@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.npmjs.org/react-native-loader-kit/-/react-native-loader-kit-2.0.8.tgz"
+  integrity sha512-mteFh4HF5uMjazLPxEE4lWw3aCWLH5jiUbqVZU4TtOWC+WV/Kck+ipDwsGzEqVxaIXh6bNoti1fkziNGLiuDJg==
 
 react-native-modal@^13.0.1:
   version "13.0.1"

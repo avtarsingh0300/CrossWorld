@@ -19,29 +19,8 @@ interface CommonInputProps {
   | 'web-search'
   | 'visible-password';
 }
-interface ProgressHeaderProps {
-  onPress: () => void;
-  value: number;
-}
+
 interface SizeBoxProps {
   size: number;
 }
-interface CommonBtnProps {
-  onPress: () => void;
-  title: string;
-}
-interface HeaderProps {
-  onPress: () => void;
-  title: string;
-}
-interface ImageComProps {
-  onPress: () => void;
-}
-interface DrawerProps {
-  onBackdropPress: () => void;
-  onClose: () => void;
-  isVisible?: boolean;
-}
-interface LoaderProps {
-  isVisible?: boolean;
-}
+
