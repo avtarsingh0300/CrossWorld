@@ -1,6 +1,12 @@
 export default {
   Stations: 'Stations',
-  AboutUs: 'AboutUs',
+  StationsStack: 'StationsStack',
+  AboutUs: 'About',
   ContactUs: 'ContactUs',
-  SupportUs: 'SupportUs',
+  SupportUs: 'Support Us',
+  Dashboard: 'Dashboard',
+  SplashScreen: 'SplashScreen',
+  MusicDetail: 'MusicDetail',
+  AboutStack: 'AboutStack',
+  PlayMusic: 'PlayMusic',
 };

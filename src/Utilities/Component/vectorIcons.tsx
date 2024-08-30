@@ -14,8 +14,9 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import FontAwesome5Brands from 'react-native-vector-icons/FontAwesome5Pro';
 import {Colors} from '../Styles/colors';
-
+import FontAwesome6Brands from 'react-native-vector-icons/FontAwesome6Pro';
 type VectorIconProps = {
   groupName: keyof typeof VectorIcons;
   name: string;
@@ -43,6 +44,8 @@ const VectorIcons = {
   FontAwesome5,
   Feather,
   FontAwesome6,
+  FontAwesome5Brands,
+  FontAwesome6Brands,
 };
 
 const VectorIcon: React.FC<VectorIconProps> = ({

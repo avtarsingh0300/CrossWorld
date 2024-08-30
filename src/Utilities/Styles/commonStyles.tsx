@@ -1,11 +1,21 @@
 import {StyleSheet} from 'react-native';
 import {textScale} from './responsiveSize';
 import fontFamily from './fontFamily';
+import {Colors} from './colors';
 
 export default StyleSheet.create({
-  font16Regular: {
-    fontSize: textScale(16),
-    fontWeight: '400',
-    fontFamily: fontFamily.regular,
+  heading: {
+    fontSize: 20,
+    fontFamily: fontFamily.bold,
+    fontWeight: '600',
+    color: Colors.black,
+    paddingLeft: 10,
+    paddingTop: 10,
+  },
+  itemtxt: {
+    color: Colors.blackgrey,
+    fontSize: 19,
+    fontWeight: '600',
+    fontFamily: fontFamily.bold,
   },
 });

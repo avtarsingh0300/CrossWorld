@@ -27,28 +27,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.appColor,
     padding: 10,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    justifyContent: 'center',
   },
   abouttxt: {
     ...commonStyles.heading,
   },
-
-  inputbox: {
-    width: '100%',
-    height: moderateScaleVertical(56),
-    backgroundColor: Colors.grayscale,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  mailicon: {
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignSelf: 'center',
+  sharingtxt: {
+    fontSize: 16,
+    fontWeight: '500',
+    fontFamily: fontFamily.regular,
+    color: Colors.black,
+    width: '60%',
+    paddingLeft: 10,
   },
   contacttxt: {
     fontSize: 16,
@@ -57,28 +47,25 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   contactbtn: {
-    width: moderateScale(183),
+    width: moderateScale(189),
     height: moderateScaleVertical(58),
     backgroundColor: Colors.appColor,
     borderRadius: 40,
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
     shadowColor: Colors.black,
     shadowOffset: {width: 1, height: 1},
     shadowOpacity: 0.4,
     shadowRadius: 1,
     elevation: 3,
   },
-
-  subcanbtn: {
+  flexvw: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
     justifyContent: 'space-between',
-  },
-  input: {
-    width: '90%',
-    color: Colors.black,
-    fontFamily: fontFamily.regular,
+    alignItems: 'center',
+    width: '65%',
+    alignSelf: 'center',
   },
 });
 export default styles;

@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
-import {Colors} from '../../Utilities/Styles/colors';
+
 import fontFamily from '../../Utilities/Styles/fontFamily';
+import {Colors} from '../../Utilities/Styles/colors';
 import {
   moderateScale,
   moderateScaleVertical,
@@ -23,41 +24,23 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: fontFamily.regular,
   },
-  stationtxt: {
-    ...commonStyles.heading,
-  },
-  mainvw: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 5,
-    alignItems: 'center',
-    paddingRight: 2,
-  },
-  innervw: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  uprofileimg: {
-    width: moderateScale(80),
-    height: moderateScaleVertical(80),
-    borderRadius: 28,
-  },
-  praisetxt: {
-    ...commonStyles.itemtxt,
-  },
-  nowplayingtxt: {
-    fontSize: 12,
-    fontWeight: '500',
-    fontFamily: fontFamily.regular,
-    color: Colors.grey,
-    paddingTop: 5,
-  },
   headervw: {
     backgroundColor: Colors.appColor,
     padding: 10,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  uprofileig: {
+    width: '100%',
+    height: moderateScaleVertical(370),
+    borderRadius: 40,
+  },
+  newsboytxt: {
+    fontSize: 32,
+    fontWeight: '600',
+    fontFamily: fontFamily.bold,
+    color: Colors.black,
   },
 });
 export default styles;
