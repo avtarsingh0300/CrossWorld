@@ -59,5 +59,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  uprofilei:{
+    width:moderateScale(60),
+    height:moderateScaleVertical(46),
+    borderRadius:30,
+    marginHorizontal:10
+  },
+  songcontainer:{
+      borderWidth:1,
+      borderColor:Colors.black,
+      marginHorizontal:10,
+      flexDirection:"row",
+      padding:5,
+      alignItems:"center",
+      borderRadius:10,
+      backgroundColor:Colors.white,
+      width:"100%",
+      alignSelf:"center"
+  }
 });
 export default styles;

@@ -20,6 +20,10 @@ const Stations = ({navigation}: any) => {
     navigation.navigate(NavigationStrings.MusicDetail);
   };
 
+  const onSongPress = () => {
+    navigation.navigate(NavigationStrings.PlayMusic);
+  }
+
   const renderItem = ({item}: any) => (
     <TouchableOpacity
       style={styles.mainvw}
@@ -63,9 +67,22 @@ const Stations = ({navigation}: any) => {
         </View>
         <SizeBox size={10} />
         <FlatList
-          data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}]}
+          data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
           renderItem={renderItem}
         />
+        <TouchableOpacity style={styles.songcontainer} onPress={onSongPress}>
+         <VectorIcon
+          groupName='AntDesign' 
+          name='arrowup'
+           size={25}
+           color={Colors.black}
+           />
+           <Image source={ImagePath.uprofile} style={styles.uprofilei} />
+           <View style={{paddingHorizontal:10}}>
+            <Text style={styles.praisetxt} numberOfLines={2}>You Are My King</Text>
+            <Text style={[styles.nowplayingtxt,{bottom:4}]}>Newsboys</Text>
+           </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

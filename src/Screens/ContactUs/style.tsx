@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   contactbtn: {
-    width: moderateScale(183),
+    width:"48%",
     height: moderateScaleVertical(58),
     backgroundColor: Colors.appColor,
     borderRadius: 40,

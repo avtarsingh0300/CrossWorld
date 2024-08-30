@@ -32,15 +32,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   uprofileig: {
-    width: '100%',
-    height: moderateScaleVertical(370),
+    width: '90%',
+    height: '50%',
     borderRadius: 40,
+    alignSelf:"center"
   },
   newsboytxt: {
     fontSize: 32,
     fontWeight: '600',
     fontFamily: fontFamily.bold,
     color: Colors.black,
+    textAlign:"center"
   },
+  kingtxt:{
+    fontSize:16,
+    fontFamily:fontFamily.regular,
+    fontWeight:"500",
+    color:Colors.grey,
+    textAlign:"center"
+  },
+  bottomline:{
+    borderBottomWidth: 1,
+     borderColor: Colors.grayscale,
+     width:"100%"
+    },
+    playbn:{
+      alignSelf:"center"
+    },
 });
 export default styles;
