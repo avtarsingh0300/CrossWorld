@@ -7,21 +7,41 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import styles from './style';
 import {Colors} from '../../Utilities/Styles/colors';
-import {SizeBox} from '../../Utilities/Component/Helpers';
+import {getData, postData, SizeBox} from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import PlayMusic from '../PlayMusic';
+import {height} from '../../Utilities/Styles/responsiveSize';
 
 const Stations = ({navigation}: any) => {
+  const refRBSheet = useRef();
   const onMusicPress = () => {
     navigation.navigate(NavigationStrings.MusicDetail);
   };
 
   const onSongPress = () => {
-    navigation.navigate(NavigationStrings.PlayMusic);
+    refRBSheet.current.open();
+    // navigation.navigate(NavigationStrings.PlayMusic);
+  };
+
+  useEffect(() => {
+    getTrackListHandler();
+  }, []);
+
+  const getTrackListHandler = () => {
+    //public.radio.co/stations/{station_id}/history
+    getData('history')
+      .then(res => {
+        console.log(res?.tracks, 'res in tracks');
+      })
+      .catch(err => {
+        console.log(err, 'err in tracks');
+      });
   };
 
   const renderItem = ({item}: any) => (
@@ -86,6 +106,32 @@ const Stations = ({navigation}: any) => {
           </View>
         </TouchableOpacity>
       </View>
+      <RBSheet
+        ref={refRBSheet}
+        useNativeDriver={false}
+        height={height}
+        closeDuration={750}
+        openDuration={750}
+        // draggable={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'transparent',
+            // height: height,
+          },
+          draggableIcon: {
+            backgroundColor: '#000',
+          },
+        }}
+        customModalProps={{
+          animationType: 'slide',
+          statusBarTranslucent: true,
+          // style: {marginTop: 200},
+        }}
+        customAvoidingViewProps={{
+          enabled: false,
+        }}>
+        <PlayMusic refRBSheet={refRBSheet} />
+      </RBSheet>
     </SafeAreaView>
   );
 };
