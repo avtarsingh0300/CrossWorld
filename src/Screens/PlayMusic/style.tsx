@@ -35,29 +35,29 @@ const styles = StyleSheet.create({
     width: '90%',
     height: '50%',
     borderRadius: 40,
-    alignSelf:"center"
+    alignSelf: 'center',
   },
   newsboytxt: {
     fontSize: 32,
     fontWeight: '600',
     fontFamily: fontFamily.bold,
     color: Colors.black,
-    textAlign:"center"
+    textAlign: 'center',
   },
-  kingtxt:{
-    fontSize:16,
-    fontFamily:fontFamily.regular,
-    fontWeight:"500",
-    color:Colors.grey,
-    textAlign:"center"
+  kingtxt: {
+    fontSize: 16,
+    fontFamily: fontFamily.regular,
+    fontWeight: '500',
+    color: Colors.grey,
+    textAlign: 'center',
   },
-  bottomline:{
+  bottomline: {
     borderBottomWidth: 1,
-     borderColor: Colors.grayscale,
-     width:"100%"
-    },
-    playbn:{
-      alignSelf:"center"
-    },
+    borderColor: Colors.grayscale,
+    width: '100%',
+  },
+  playbn: {
+    alignSelf: 'center',
+  },
 });
 export default styles;
