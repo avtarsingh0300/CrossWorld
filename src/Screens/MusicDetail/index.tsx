@@ -7,28 +7,61 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styles from './style';
 import {SizeBox} from '../../Utilities/Component/Helpers';
 import {Colors} from '../../Utilities/Styles/colors';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import {height} from '../../Utilities/Styles/responsiveSize';
+import PlayMusic from '../PlayMusic';
 
 const MusicDetail = ({navigation}: any) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const refRBSheet = useRef();
+
+  useEffect(() => {
+    // Replace with your API endpoint
+    const url = 'https://public.radio.co/stations/sa2a626859/history';
+
+    // Function to fetch data
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const jsonData = await response.json();
+        setData(jsonData?.tracks);
+        console.log(jsonData?.tracks);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array means this runs once when the component mounts
+
   const onBack = () => {
     navigation.goBack();
   };
   const onPlay = () => {
-    navigation.navigate(NavigationStrings.PlayMusic);
+    refRBSheet.current.open();
   };
   const renderItem = ({item}: any) => (
     <TouchableOpacity style={styles.mainvw} activeOpacity={0.7}>
       <View style={styles.innervw}>
-        <Image source={ImagePath.uprofile} style={styles.uprofileig} />
+        <Image source={{uri: item?.artwork_url}} style={styles.uprofileig} />
         <View style={{paddingHorizontal: 10, width: '70%'}}>
           <Text style={styles.nowplayingtxt} numberOfLines={1}>
-            When We Pray
+            {item?.title}
           </Text>
           <Text style={styles.praisetxt} numberOfLines={2}>
             Tauren wells
@@ -37,6 +70,7 @@ const MusicDetail = ({navigation}: any) => {
       </View>
     </TouchableOpacity>
   );
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.appColor}}>
       <View style={styles.container}>
@@ -89,11 +123,37 @@ const MusicDetail = ({navigation}: any) => {
         <Text style={styles.stnhistxt}>Station History</Text>
         <SizeBox size={10} />
         <FlatList
-          data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
+          data={data}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
         />
       </View>
+      <RBSheet
+        ref={refRBSheet}
+        useNativeDriver={false}
+        height={height}
+        closeDuration={750}
+        openDuration={750}
+        // draggable={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'transparent',
+            // height: height,
+          },
+          draggableIcon: {
+            backgroundColor: '#000',
+          },
+        }}
+        customModalProps={{
+          animationType: 'slide',
+          statusBarTranslucent: true,
+          // style: {marginTop: 200},
+        }}
+        customAvoidingViewProps={{
+          enabled: false,
+        }}>
+        <PlayMusic refRBSheet={refRBSheet} />
+      </RBSheet>
     </SafeAreaView>
   );
 };
