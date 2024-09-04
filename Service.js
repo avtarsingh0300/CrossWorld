@@ -1,5 +1,3 @@
-TrackPlayer.registerPlaybackService(() => require('./Service.js'));
-
 import TrackPlayer from 'react-native-track-player';
 
 module.exports = async function () {

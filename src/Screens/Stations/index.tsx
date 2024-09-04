@@ -89,6 +89,7 @@ const Stations = ({navigation}: any) => {
         <FlatList
           data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
           renderItem={renderItem}
+          keyExtractor={(item, index) => index?.toString()}
         />
         <TouchableOpacity style={styles.songcontainer} onPress={onSongPress}>
           <VectorIcon
