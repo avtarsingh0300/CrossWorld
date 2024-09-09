@@ -22,7 +22,7 @@ const PlayMusic = ({refRBSheet}: any) => {
   const [duration, setDuration] = useState(100);
   const playbackState = usePlaybackState();
 
-  const onSeek = value => {
+  const onSeek = (value: any) => {
     try {
       let getValue = parseInt(value[0])?.toFixed(0);
       TrackPlayer.seekTo(parseInt(getValue));
