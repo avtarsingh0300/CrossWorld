@@ -15,7 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 const PlayMusic = ({refRBSheet}: any) => {
   const [button, setButton] = useState(false);
-  const [position, setPosition] = useState(0); // Current position of the song in seconds
+  const [position, setPosition] = useState(0);
   const [currentTrackPlaying, setCurrentPlayingTrack] = useState({});
   const [duration, setDuration] = useState(100);
   const playbackState = usePlaybackState();
@@ -31,26 +31,15 @@ const PlayMusic = ({refRBSheet}: any) => {
     }
   }, [progress?.position, playbackState?.state]);
 
-  // const onSeek = (value: any) => {
-  //   try {
-  //     let getValue = parseInt(value[0])?.toFixed(0);
-  //     TrackPlayer.seekTo(parseInt(getValue));
-  //     setPosition(parseInt(getValue));
-  //   } catch (error) {}
-  // };
-
   var convertMinutes = Math.floor(position / 60);
-  // console.log(convertMinutes, "convertMinutes")
 
   var minutes = convertMinutes < 10 ? '0' + convertMinutes : convertMinutes;
 
-  // Calculate remaining seconds
   var convertSeconds = position % 60;
   var seconds = convertSeconds < 10 ? '0' + convertSeconds : convertSeconds;
-  // console.log(seconds, "convertMinutes")
-  // Calculate minutes
+
   var convertDurationMinutes = Math.floor(duration / 60);
-  // console.log(convertDurationMinutes, "convertDurationMinutes")
+
   var durationMinutes =
     convertDurationMinutes < 10
       ? '0' + convertDurationMinutes
@@ -82,10 +71,7 @@ const PlayMusic = ({refRBSheet}: any) => {
     } catch (error) {
       console.log(error, 'jhvhjv');
     }
-    // }
   };
-
-  // console.log(currentTrackPlaying, 'currentTrackPlaying');
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -128,9 +114,7 @@ const PlayMusic = ({refRBSheet}: any) => {
               minimumValue={0}
               maximumValue={parseInt(duration) > 0 ? duration : 0}
               value={parseInt(position) > 0 ? position : 0}
-              // onSlidingComplete={onSeek}
               containerStyle={{width: '100%'}}
-              // disabled
               minimumTrackTintColor={'#1ABAF0'}
               maximumTrackTintColor="#E0E0E0"
               thumbTintColor={Colors.appColor}
