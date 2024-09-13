@@ -2,10 +2,10 @@ import {View, Text, StatusBar} from 'react-native';
 import React, {useEffect} from 'react';
 import styles from './style';
 import {SafeAreaView} from 'react-native';
-import LoaderKit from 'react-native-loader-kit';
 import {Colors} from '../../Utilities/Styles/colors';
 import {SizeBox} from '../../Utilities/Component/Helpers';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {BallIndicator} from 'react-native-indicators';
 
 const SplashScreen = ({navigation}: any) => {
   useEffect(() => {
@@ -23,11 +23,7 @@ const SplashScreen = ({navigation}: any) => {
         <Text style={styles.thetxt}>WORLDWIDE</Text>
       </View>
       <SizeBox size={50} />
-      <LoaderKit
-        style={styles.loader}
-        name={'BallSpinFadeLoader'}
-        color={Colors.white}
-      />
+      <BallIndicator color={Colors.white} style={styles.loader} />
     </SafeAreaView>
   );
 };

@@ -49,13 +49,14 @@ const MusicDetail = ({navigation, route}: any) => {
 
   useEffect(() => {
     fetchData();
+    getCurrentTrack();
   }, []);
 
   const getCurrentTrack = () => {
     getData(route?.params?.id + '/status')
       .then(res => {
         setLoading(false);
-        // console.log(res, 'res in playing tracks');
+        console.log(res, 'res in playing tracks');
         setPlayerTrack(res?.current_track);
       })
       .catch(err => {
@@ -163,7 +164,9 @@ const MusicDetail = ({navigation, route}: any) => {
             )}
             <View style={{justifyContent: 'center', marginHorizontal: 10}}>
               <Text style={styles.praisetxt}>Now Playing</Text>
-              <Text style={styles.nowplayingtxt}>{playingTrack?.title}</Text>
+              <View style={{width: '80%'}}>
+                <Text style={styles.nowplayingtxt}>{playingTrack?.title}</Text>
+              </View>
               <Text style={styles.praisetxt}>
                 {moment(playingTrack?.start_time).format('LL')}
               </Text>
@@ -194,6 +197,7 @@ const MusicDetail = ({navigation, route}: any) => {
           data={data}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => index?.toString()}
         />
         {(playbackState?.state == State?.Playing ||
           playbackState?.state == State?.Paused) && (
