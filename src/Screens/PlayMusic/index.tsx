@@ -1,19 +1,17 @@
-import {
-  Image,
-  SafeAreaView,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, {useState} from 'react';
+import {Image, StatusBar, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import styles from './style';
 import {Colors} from '../../Utilities/Styles/colors';
 import {SizeBox} from '../../Utilities/Component/Helpers';
-import ImagePath from '../../Utilities/Constants/ImagePath';
 import {Slider} from '@miblanchard/react-native-slider';
-import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
+import TrackPlayer, {
+  State,
+  usePlaybackState,
+  useProgress,
+} from 'react-native-track-player';
+import moment from 'moment';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const PlayMusic = ({refRBSheet}: any) => {
   const [button, setButton] = useState(false);
@@ -21,14 +19,25 @@ const PlayMusic = ({refRBSheet}: any) => {
   const [currentTrackPlaying, setCurrentPlayingTrack] = useState({});
   const [duration, setDuration] = useState(100);
   const playbackState = usePlaybackState();
+  const progress = useProgress();
 
-  const onSeek = (value: any) => {
-    try {
-      let getValue = parseInt(value[0])?.toFixed(0);
-      TrackPlayer.seekTo(parseInt(getValue));
-      setPosition(parseInt(getValue));
-    } catch (error) {}
-  };
+  useEffect(() => {
+    if (
+      playbackState?.state == State.Playing ||
+      playbackState?.state == State?.Paused
+    ) {
+      getTimeHandler();
+      getCurrentTrackPlayingHandler();
+    }
+  }, [progress?.position, playbackState?.state]);
+
+  // const onSeek = (value: any) => {
+  //   try {
+  //     let getValue = parseInt(value[0])?.toFixed(0);
+  //     TrackPlayer.seekTo(parseInt(getValue));
+  //     setPosition(parseInt(getValue));
+  //   } catch (error) {}
+  // };
 
   var convertMinutes = Math.floor(position / 60);
   // console.log(convertMinutes, "convertMinutes")
@@ -58,6 +67,26 @@ const PlayMusic = ({refRBSheet}: any) => {
     refRBSheet.current.close();
   };
 
+  const getCurrentTrackPlayingHandler = async () => {
+    const current = await TrackPlayer.getCurrentTrack();
+    const track = await TrackPlayer.getTrack(current);
+    setCurrentPlayingTrack(track);
+  };
+
+  const getTimeHandler = async () => {
+    try {
+      let getPosition = await TrackPlayer.getPosition();
+      setPosition(getPosition?.toFixed(0));
+      const getDuration = await TrackPlayer.getDuration();
+      setDuration(getDuration?.toFixed(0));
+    } catch (error) {
+      console.log(error, 'jhvhjv');
+    }
+    // }
+  };
+
+  // console.log(currentTrackPlaying, 'currentTrackPlaying');
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
@@ -81,11 +110,16 @@ const PlayMusic = ({refRBSheet}: any) => {
         </TouchableOpacity>
         <SizeBox size={20} />
         <View style={{paddingHorizontal: 10}}>
-          <Image source={ImagePath.uprofile} style={styles.uprofileig} />
+          <Image
+            source={{uri: currentTrackPlaying?.artwork}}
+            style={styles.uprofileig}
+          />
           <SizeBox size={10} />
-          <Text style={styles.newsboytxt}>Newsboys</Text>
+          <Text style={styles.newsboytxt}>{currentTrackPlaying?.title}</Text>
           <SizeBox size={3} />
-          <Text style={styles.kingtxt}>You Are My King</Text>
+          <Text style={styles.kingtxt}>
+            {moment(currentTrackPlaying?.time).format('LL')}
+          </Text>
           <SizeBox size={5} />
           <View style={styles.bottomline} />
           <SizeBox size={20} />
@@ -94,7 +128,7 @@ const PlayMusic = ({refRBSheet}: any) => {
               minimumValue={0}
               maximumValue={parseInt(duration) > 0 ? duration : 0}
               value={parseInt(position) > 0 ? position : 0}
-              onSlidingComplete={onSeek}
+              // onSlidingComplete={onSeek}
               containerStyle={{width: '100%'}}
               // disabled
               minimumTrackTintColor={'#1ABAF0'}
@@ -109,22 +143,17 @@ const PlayMusic = ({refRBSheet}: any) => {
               <Text style={{color: Colors.black}}>
                 {minutes + ':' + seconds}
               </Text>
-              <Text style={{color: Colors.black}}>
-                {playbackState?.state == State?.Loading ||
-                playbackState?.state == State?.Buffering
-                  ? '00:00'
-                  : durationMinutes + ':' + durationSeconds}
-              </Text>
+              <Text style={{color: Colors.black}}>-- : --</Text>
             </View>
           </View>
           <SizeBox size={5} />
-          {button ? (
+          {playbackState?.state == State?.Playing ? (
             <TouchableOpacity
               activeOpacity={0.6}
-              onPress={() => setButton(false)}>
+              onPress={async () => await TrackPlayer.pause()}>
               <VectorIcon
                 groupName="AntDesign"
-                name="play"
+                name="pausecircle"
                 size={55}
                 color={Colors.appColor}
                 style={styles.playbn}
@@ -133,10 +162,10 @@ const PlayMusic = ({refRBSheet}: any) => {
           ) : (
             <TouchableOpacity
               activeOpacity={0.6}
-              onPress={() => setButton(true)}>
+              onPress={async () => await TrackPlayer.play()}>
               <VectorIcon
                 groupName="AntDesign"
-                name="pausecircle"
+                name="play"
                 size={55}
                 color={Colors.appColor}
                 style={styles.playbn}

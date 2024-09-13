@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styles from './style';
 import {Colors} from '../../Utilities/Styles/colors';
 import {getData, postData, SizeBox} from '../../Utilities/Component/Helpers';
@@ -17,11 +17,15 @@ import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import PlayMusic from '../PlayMusic';
 import {height} from '../../Utilities/Styles/responsiveSize';
+import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
+import moment from 'moment';
 
 const Stations = ({navigation}: any) => {
+  const playbackState = usePlaybackState();
   const refRBSheet = useRef();
+  const [currentTrackPlaying, setCurrentPlayingTrack] = useState({});
   const onMusicPress = () => {
-    navigation.navigate(NavigationStrings.MusicDetail);
+    navigation.navigate(NavigationStrings.MusicDetail, {id: 'sa2a626859'});
   };
 
   const onSongPress = () => {
@@ -30,19 +34,30 @@ const Stations = ({navigation}: any) => {
   };
 
   useEffect(() => {
-    getTrackListHandler();
-  }, []);
+    if (
+      playbackState?.state == State.Playing ||
+      playbackState?.state == State?.Paused
+    ) {
+      getCurrentTrackPlayingHandler();
+    }
+  }, [playbackState?.state]);
 
-  const getTrackListHandler = () => {
-    //public.radio.co/stations/{station_id}/history
-    getData('history')
-      .then(res => {
-        console.log(res?.tracks, 'res in tracks');
-      })
-      .catch(err => {
-        console.log(err, 'err in tracks');
-      });
+  const getCurrentTrackPlayingHandler = async () => {
+    const current = await TrackPlayer.getCurrentTrack();
+    const track = await TrackPlayer.getTrack(current);
+    setCurrentPlayingTrack(track);
   };
+
+  // const getTrackListHandler = () => {
+  //   //public.radio.co/stations/{station_id}/history
+  //   getData('history')
+  //     .then(res => {
+  //       // console.log(res?.tracks, 'res in tracks');
+  //     })
+  //     .catch(err => {
+  //       console.log(err, 'err in tracks');
+  //     });
+  // };
 
   const renderItem = ({item}: any) => (
     <TouchableOpacity
@@ -68,8 +83,12 @@ const Stations = ({navigation}: any) => {
       />
     </TouchableOpacity>
   );
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.appColor}}>
+      {/* <WebView
+        style={{flex: 1}}
+        source={{uri: 'https://embed.radio.co/player/946a102.html'}}></WebView> */}
       <View style={styles.container}>
         <StatusBar backgroundColor={Colors.appColor} />
 
@@ -87,25 +106,33 @@ const Stations = ({navigation}: any) => {
         </View>
         <SizeBox size={10} />
         <FlatList
-          data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
+          data={[{id: 1}]}
           renderItem={renderItem}
           keyExtractor={(item, index) => index?.toString()}
         />
-        <TouchableOpacity style={styles.songcontainer} onPress={onSongPress}>
-          <VectorIcon
-            groupName="AntDesign"
-            name="arrowup"
-            size={25}
-            color={Colors.black}
-          />
-          <Image source={ImagePath.uprofile} style={styles.uprofilei} />
-          <View style={{paddingHorizontal: 10}}>
-            <Text style={styles.praisetxt} numberOfLines={2}>
-              You Are My King
-            </Text>
-            <Text style={[styles.nowplayingtxt, {bottom: 4}]}>Newsboys</Text>
-          </View>
-        </TouchableOpacity>
+        {(playbackState?.state == State?.Playing ||
+          playbackState?.state == State?.Paused) && (
+          <TouchableOpacity style={styles.songcontainer} onPress={onSongPress}>
+            <VectorIcon
+              groupName="AntDesign"
+              name="arrowup"
+              size={25}
+              color={Colors.black}
+            />
+            <Image
+              source={{uri: currentTrackPlaying?.artwork}}
+              style={styles.uprofilei}
+            />
+            <View style={{paddingHorizontal: 10}}>
+              <Text style={styles.praisetxt} numberOfLines={2}>
+                {currentTrackPlaying?.title}
+              </Text>
+              <Text style={[styles.nowplayingtxt, {bottom: 4}]}>
+                {moment(currentTrackPlaying?.time).format('LL')}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
       <RBSheet
         ref={refRBSheet}

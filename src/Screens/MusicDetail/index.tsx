@@ -9,73 +9,134 @@ import {
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import styles from './style';
-import {SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  getData,
+  Loadingcomponent,
+  SizeBox,
+} from '../../Utilities/Component/Helpers';
 import {Colors} from '../../Utilities/Styles/colors';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import ImagePath from '../../Utilities/Constants/ImagePath';
-import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {height} from '../../Utilities/Styles/responsiveSize';
 import PlayMusic from '../PlayMusic';
+import moment from 'moment';
+import uuid from 'react-native-uuid';
+import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
 
-const MusicDetail = ({navigation}: any) => {
+const MusicDetail = ({navigation, route}: any) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const [playingTrack, setPlayerTrack] = useState({});
+  const playbackState = usePlaybackState();
+  const [currentTrackPlaying, setCurrentPlayingTrack] = useState({});
   const refRBSheet = useRef();
 
   useEffect(() => {
-    // Replace with your API endpoint
-    const url = 'https://public.radio.co/stations/sa2a626859/history';
+    if (
+      playbackState?.state == State.Playing ||
+      playbackState?.state == State?.Paused
+    ) {
+      getCurrentTrack();
+      getCurrentTrackPlayingHandler();
+    }
+  }, [playbackState?.state]);
 
-    // Function to fetch data
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const jsonData = await response.json();
-        setData(jsonData?.tracks);
-        console.log(jsonData?.tracks);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const getCurrentTrackPlayingHandler = async () => {
+    const current = await TrackPlayer.getCurrentTrack();
+    const track = await TrackPlayer.getTrack(current);
+    setCurrentPlayingTrack(track);
+  };
 
+  useEffect(() => {
     fetchData();
-  }, []); // Empty dependency array means this runs once when the component mounts
+  }, []);
+
+  const getCurrentTrack = () => {
+    getData(route?.params?.id + '/status')
+      .then(res => {
+        setLoading(false);
+        // console.log(res, 'res in playing tracks');
+        setPlayerTrack(res?.current_track);
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err, 'err in playing tracks');
+      });
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    getData(route?.params?.id + '/history')
+      .then(res => {
+        var modifyData = [];
+        res?.tracks?.map(i => {
+          modifyData.push({
+            time: i?.start_time,
+            id: uuid.v4(),
+            url: `https://streams.radio.co/${route?.params?.id}/listen`,
+            title: i?.title,
+            artwork: i?.artwork_url,
+          });
+        });
+        setLoading(false);
+        setData(modifyData);
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err, 'err in tracks');
+      });
+  };
 
   const onBack = () => {
     navigation.goBack();
   };
+
   const onPlay = () => {
-    refRBSheet.current.open();
+    TrackPlayer.reset().then(async res => {
+      TrackPlayer.add(data);
+      await TrackPlayer.skip(0);
+      await TrackPlayer.play();
+      refRBSheet.current.open();
+    });
   };
-  const renderItem = ({item}: any) => (
-    <TouchableOpacity style={styles.mainvw} activeOpacity={0.7}>
+
+  const renderItem = ({item, index}: any) => (
+    <TouchableOpacity
+      style={styles.mainvw}
+      activeOpacity={0.8}
+      onPress={() => {
+        TrackPlayer.reset().then(async res => {
+          TrackPlayer.add(data);
+          await TrackPlayer.skip(index);
+          await TrackPlayer.play();
+          refRBSheet.current.open();
+        });
+      }}>
       <View style={styles.innervw}>
-        <Image source={{uri: item?.artwork_url}} style={styles.uprofileig} />
+        {item?.artwork && (
+          <Image source={{uri: item?.artwork}} style={styles.uprofileig} />
+        )}
         <View style={{paddingHorizontal: 10, width: '70%'}}>
           <Text style={styles.nowplayingtxt} numberOfLines={1}>
             {item?.title}
           </Text>
           <Text style={styles.praisetxt} numberOfLines={2}>
-            Tauren wells
+            {moment(item?.time).format('LL')}
           </Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 
+  const onSongPress = () => {
+    refRBSheet.current.open();
+  };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.appColor}}>
+      <Loadingcomponent isVisible={loading} />
       <View style={styles.container}>
         <StatusBar backgroundColor={Colors.appColor} />
-
         <View style={styles.headervw}>
           <VectorIcon
             groupName="AntDesign"
@@ -94,11 +155,18 @@ const MusicDetail = ({navigation}: any) => {
           <Text style={styles.stationtxt}>Praise and Worship</Text>
           <SizeBox size={10} />
           <View style={{flexDirection: 'row'}}>
-            <Image source={ImagePath.uprofile} style={styles.uprofileimg} />
+            {playingTrack?.artwork_url && (
+              <Image
+                source={{uri: playingTrack?.artwork_url}}
+                style={styles.uprofileimg}
+              />
+            )}
             <View style={{justifyContent: 'center', marginHorizontal: 10}}>
               <Text style={styles.praisetxt}>Now Playing</Text>
-              <Text style={styles.nowplayingtxt}>You Are My King</Text>
-              <Text style={styles.praisetxt}>Newsboys</Text>
+              <Text style={styles.nowplayingtxt}>{playingTrack?.title}</Text>
+              <Text style={styles.praisetxt}>
+                {moment(playingTrack?.start_time).format('LL')}
+              </Text>
             </View>
           </View>
           <SizeBox size={10} />
@@ -127,6 +195,29 @@ const MusicDetail = ({navigation}: any) => {
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
         />
+        {(playbackState?.state == State?.Playing ||
+          playbackState?.state == State?.Paused) && (
+          <TouchableOpacity style={styles.songcontainer} onPress={onSongPress}>
+            <VectorIcon
+              groupName="AntDesign"
+              name="arrowup"
+              size={25}
+              color={Colors.black}
+            />
+            <Image
+              source={{uri: currentTrackPlaying?.artwork}}
+              style={styles.uprofilei}
+            />
+            <View style={{paddingHorizontal: 10}}>
+              <Text style={styles.praisetxt} numberOfLines={2}>
+                {currentTrackPlaying?.title}
+              </Text>
+              <Text style={[styles.nowplayingtxt, {bottom: 4}]}>
+                {moment(currentTrackPlaying?.time).format('LL')}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
       <RBSheet
         ref={refRBSheet}
